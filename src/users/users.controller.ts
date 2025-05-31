@@ -33,7 +33,7 @@ export class UsersController {
   createUser(@Body() dto: CreateUserDto) {
     return this.usersService.create(dto);
   }
-
+  @HttpCode(HttpStatus.OK)
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() dto: UpdatePasswordDto) {
     return this.usersService.update(id, dto);

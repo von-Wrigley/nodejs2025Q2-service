@@ -5,15 +5,18 @@ import {
   // NotFoundException,
 } from '@nestjs/common';
 import { validate as uuidValidate } from 'uuid';
-import { users } from './users';
+import { users, Userstype } from './users';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
+import { plainToClass } from 'class-transformer';
+import { UserEntity } from './userEntity';
 
 @Injectable()
 export class UsersService {
+  users: Userstype[];
   findAll() {
-    return users;
+    return users.map((user) => plainToClass(UserEntity, user));
   }
 
   findById(id: string) {
@@ -26,7 +29,7 @@ export class UsersService {
       // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    return x;
+    return plainToClass(UserEntity, x);
   }
 
   create(dto: CreateUserDto) {
@@ -34,32 +37,38 @@ export class UsersService {
       id: uuidv4(),
       login: dto.login,
       password: dto.password,
-      version: 0,
-      createdAt: 222,
-      updatedAt: 22,
+      version: 1,
+      createdAt: new Date().getMilliseconds(),
+      updatedAt: new Date().getMilliseconds(),
     };
 
     users.push(newUser);
-    return newUser;
+    return plainToClass(UserEntity, newUser);
   }
   update(id: string, dto: UpdatePasswordDto) {
     if (!uuidValidate(id)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
 
-    const user = this.findById(id);
+    const user = users.find((user) => user.id === id);
 
     if (!user) {
       // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-
+    console.log(user);
+    console.log(users);
     if (user.password !== dto.oldPassword) {
+      console.log(user.password);
+      console.log(dto.oldPassword);
       throw new HttpException('oldPassword is wrong', HttpStatus.FORBIDDEN);
     }
 
     user.password = dto.newPassword;
-    return user;
+    user.version = user.version + 1;
+    user.updatedAt = new Date().getMilliseconds();
+    console.log();
+    return plainToClass(UserEntity, user);
   }
 
   delete(id: string) {
@@ -67,12 +76,14 @@ export class UsersService {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
 
-    const user = this.findById(id);
-    if (!user) {
+    const userFound = users.find((user) => user.id === id);
+    if (!userFound) {
       // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    users.filter((us) => us.id !== user.id);
+    // users.filter((user) => user.id !== userFound.id);
+    const userIndex = users.findIndex((user) => user.id === id);
+    users.splice(userIndex, 1);
     return true;
   }
 }
