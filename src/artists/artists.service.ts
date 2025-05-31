@@ -20,14 +20,14 @@ export class ArtistsService {
     };
 
     artists.push(newArtist);
-    return artists;
+    return newArtist;
   }
 
-  findById(id: string) {
-    if (!uuidValidate(id)) {
+  findById(artistId: string) {
+    if (!uuidValidate(artistId)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
-    const x = artists.find((task) => task.id === id);
+    const x = artists.find((artist) => artist.id === artistId);
 
     if (!x) {
       // throw new NotFoundException('NOT_FOUND')
@@ -35,4 +35,36 @@ export class ArtistsService {
     }
     return x;
   }
+
+  changeById(id: string, dto: CreateArtistDto) {
+    if (!uuidValidate(id)) {
+      throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
+    }
+
+    const artist = this.findById(id);
+
+    if (!artist) {
+      // throw new NotFoundException('NOT_FOUND')
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    artist.name = dto.name;
+    artist.grammy = dto.grammy;
+
+    return artist;
+  }
+  delete(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
+    }
+    const x = this.findById(id);
+
+    if (!x) {
+      // throw new NotFoundException('NOT_FOUND')
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    artists.filter((artist) => artist.id !== x.id);
+
+    return true;
+  }
 }
+// npm test -- test/artists.e2e.spec.ts
