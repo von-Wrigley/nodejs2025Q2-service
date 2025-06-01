@@ -62,7 +62,8 @@ export class ArtistsService {
       // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    artists.filter((artist) => artist.id !== x.id);
+    const artistIndex = artists.findIndex((art) => art.id === id);
+    artists.splice(artistIndex, 1);
 
     return true;
   }
