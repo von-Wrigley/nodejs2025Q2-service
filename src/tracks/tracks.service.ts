@@ -1,12 +1,24 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { tracks, trackstype } from './tracks';
 // npm test -- test/tracks.e2e.spec.ts
 import { validate as uuidValidate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 import { createTrackDto } from './dto/createTrackDto';
+import { FavoritesService } from 'src/favorites/favorites.service';
 @Injectable()
 export class TracksService {
   tracks: trackstype[];
+
+  constructor(
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService,
+  ) {}
 
   getAll() {
     return tracks;
@@ -66,6 +78,8 @@ export class TracksService {
     const trackIndex = tracks.findIndex((tr) => tr.id === id);
     tracks.splice(trackIndex, 1);
 
+    this.favoritesService.deleteTrackFav(id);
+
     return true;
   }
 
@@ -79,5 +93,10 @@ export class TracksService {
     tracks.map((track) =>
       track.albumId === id ? (track.albumId = null) : track,
     );
+  }
+
+  getTrackForFavorites(id: string) {
+    const x = tracks.find((track) => track.id === id);
+    return x;
   }
 }

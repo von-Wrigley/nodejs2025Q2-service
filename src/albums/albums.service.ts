@@ -1,14 +1,25 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { albums, AlbumType } from './albums';
 import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { creteAlbumDto } from './dto/creteAlbumDto';
 import { TracksService } from 'src/tracks/tracks.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 @Injectable()
 export class AlbumsService {
   albums: AlbumType[];
 
-  constructor(private TrackService: TracksService) {}
+  constructor(
+    private TrackService: TracksService,
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService,
+  ) {}
 
   getAll() {
     return albums;
@@ -69,11 +80,18 @@ export class AlbumsService {
 
     this.TrackService.nullAlbumId(id);
 
+    this.favoritesService.deleteAlbumFav(id);
+
     return true;
   }
   NullArtistId(id: string) {
     albums.map((album) =>
       album.artistId === id ? (album.artistId = null) : album,
     );
+  }
+
+  getAlbumForFavorites(id: string) {
+    const x = albums.find((album) => album.id === id);
+    return x;
   }
 }

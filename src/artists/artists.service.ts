@@ -1,15 +1,25 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { artists, Art } from './artists';
 import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { AlbumsService } from 'src/albums/albums.service';
 import { TracksService } from 'src/tracks/tracks.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 @Injectable()
 export class ArtistsService {
   artists: Art[];
 
   constructor(
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService,
+    // @Inject(forwardRef(() => AlbumsService))
     private albumService: AlbumsService,
     private trackService: TracksService,
   ) {}
@@ -74,7 +84,14 @@ export class ArtistsService {
 
     this.trackService.nullArtistId(id);
     this.albumService.NullArtistId(id);
+
+    this.favoritesService.deleteArtistFav(id);
+
     return true;
+  }
+  getArtistforFavorites(id: string) {
+    const x = artists.find((artist) => artist.id === id);
+    return x;
   }
 }
 // npm test -- test/artists.e2e.spec.ts

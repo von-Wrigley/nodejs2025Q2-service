@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { favorites } from './favorites';
 import { TracksService } from 'src/tracks/tracks.service';
 import { ArtistsService } from 'src/artists/artists.service';
@@ -7,8 +13,11 @@ import { validate as uuidValidate } from 'uuid';
 @Injectable()
 export class FavoritesService {
   constructor(
+    @Inject(forwardRef(() => ArtistsService))
     private artistService: ArtistsService,
+    @Inject(forwardRef(() => AlbumsService))
     private albumService: AlbumsService,
+    @Inject(forwardRef(() => TracksService))
     private trackService: TracksService,
   ) {}
 
@@ -19,11 +28,11 @@ export class FavoritesService {
     if (!uuidValidate(id)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
-    const x = this.trackService.getTrack(id);
 
+    const x = this.trackService.getTrackForFavorites(id);
     if (!x) {
       // throw new NotFoundException('NOT_FOUND')
-      throw new HttpException('Not Found', HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException('Not exist', HttpStatus.UNPROCESSABLE_ENTITY);
     }
     favorites.tracks.push(x);
   }
@@ -32,8 +41,6 @@ export class FavoritesService {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
     const trackFound = favorites.tracks.find((user) => user.id === id);
-    console.log(trackFound);
-    console.log('wdwwd');
 
     if (!trackFound) {
       // throw new NotFoundException('NOT_FOUND')
@@ -46,11 +53,16 @@ export class FavoritesService {
     return true;
   }
 
+  deleteTrackFav(id: string) {
+    const trackIndex = favorites.tracks.findIndex((tr) => tr.id === id);
+    favorites.tracks.splice(trackIndex, 1);
+  }
+
   createAbumk(id: string) {
     if (!uuidValidate(id)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
-    const alb = this.albumService.getById(id);
+    const alb = this.albumService.getAlbumForFavorites(id);
 
     if (!alb) {
       // throw new NotFoundException('NOT_FOUND')
@@ -76,12 +88,16 @@ export class FavoritesService {
 
     return true;
   }
+  deleteAlbumFav(id: string) {
+    const AbumIndex = favorites.albums.findIndex((tr) => tr.id === id);
+    favorites.albums.splice(AbumIndex, 1);
+  }
 
   createArtist(id: string) {
     if (!uuidValidate(id)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
-    const artist = this.artistService.findById(id);
+    const artist = this.artistService.getArtistforFavorites(id);
 
     if (!artist) {
       // throw new NotFoundException('NOT_FOUND')
@@ -94,7 +110,6 @@ export class FavoritesService {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
     const artistFound = favorites.artists.find((user) => user.id === id);
-
     if (!artistFound) {
       // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -104,5 +119,9 @@ export class FavoritesService {
     favorites.artists.splice(artistIndex, 1);
 
     return true;
+  }
+  deleteArtistFav(id: string) {
+    const artistIndex = favorites.artists.findIndex((tr) => tr.id === id);
+    favorites.artists.splice(artistIndex, 1);
   }
 }
