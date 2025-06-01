@@ -3,9 +3,16 @@ import { artists, Art } from './artists';
 import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { CreateArtistDto } from './dto/createArtist.dto';
+import { AlbumsService } from 'src/albums/albums.service';
+import { TracksService } from 'src/tracks/tracks.service';
 @Injectable()
 export class ArtistsService {
   artists: Art[];
+
+  constructor(
+    private albumService: AlbumsService,
+    private trackService: TracksService,
+  ) {}
 
   getAll() {
     console.log(artists);
@@ -65,6 +72,8 @@ export class ArtistsService {
     const artistIndex = artists.findIndex((art) => art.id === id);
     artists.splice(artistIndex, 1);
 
+    this.trackService.nullArtistId(id);
+    this.albumService.NullArtistId(id);
     return true;
   }
 }

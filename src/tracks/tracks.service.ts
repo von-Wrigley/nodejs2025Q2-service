@@ -7,6 +7,7 @@ import { createTrackDto } from './dto/createTrackDto';
 @Injectable()
 export class TracksService {
   tracks: trackstype[];
+
   getAll() {
     return tracks;
   }
@@ -26,7 +27,7 @@ export class TracksService {
     const newtrack = {
       id: uuidv4(),
       name: dto.name,
-      artistId: dto.artistId ?? null,
+      artistId: dto.artistId || null,
       albumId: dto.albumId ?? null,
       duration: dto.duration,
     };
@@ -66,5 +67,17 @@ export class TracksService {
     tracks.splice(trackIndex, 1);
 
     return true;
+  }
+
+  nullArtistId(id: string) {
+    tracks.map((track) =>
+      track.artistId === id ? (track.artistId = null) : track,
+    );
+  }
+
+  nullAlbumId(id: string) {
+    tracks.map((track) =>
+      track.albumId === id ? (track.albumId = null) : track,
+    );
   }
 }

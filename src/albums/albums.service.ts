@@ -3,9 +3,13 @@ import { albums, AlbumType } from './albums';
 import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { creteAlbumDto } from './dto/creteAlbumDto';
+import { TracksService } from 'src/tracks/tracks.service';
 @Injectable()
 export class AlbumsService {
   albums: AlbumType[];
+
+  constructor(private TrackService: TracksService) {}
+
   getAll() {
     return albums;
   }
@@ -27,7 +31,7 @@ export class AlbumsService {
       id: uuidv4(),
       name: dto.name,
       year: dto.year,
-      artistId: dto.artistId ?? null,
+      artistId: dto.artistId || null,
     };
     albums.push(newAlbum);
     return newAlbum;
@@ -63,6 +67,13 @@ export class AlbumsService {
     const albIndex = albums.findIndex((tr) => tr.id === id);
     albums.splice(albIndex, 1);
 
+    this.TrackService.nullAlbumId(id);
+
     return true;
+  }
+  NullArtistId(id: string) {
+    albums.map((album) =>
+      album.artistId === id ? (album.artistId = null) : album,
+    );
   }
 }
