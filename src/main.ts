@@ -9,11 +9,12 @@ import 'dotenv/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  const port = process.env.PORT || 4000;
 
   const raw = await readFile('doc/api.yaml', 'utf8');
   const doc = loadYaml(raw) as OpenAPIObject;
+  doc.servers = [{ url: `http://localhost:${port}` }];
   SwaggerModule.setup('doc', app, doc);
-  const port = process.env.PORT || 4000;
   await app.listen(port);
 }
 bootstrap();
