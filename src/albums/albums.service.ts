@@ -32,7 +32,6 @@ export class AlbumsService {
     const x = albums.find((album) => album.id === id);
 
     if (!x) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     return x;
@@ -55,7 +54,6 @@ export class AlbumsService {
     const albumFound = albums.find((album) => album.id === id);
 
     if (!albumFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     albumFound.artistId = dto.artistId;
@@ -71,7 +69,6 @@ export class AlbumsService {
     const albumFound = albums.find((alb) => alb.id === id);
 
     if (!albumFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 

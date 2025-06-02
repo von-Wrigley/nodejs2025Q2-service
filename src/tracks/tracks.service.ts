@@ -6,7 +6,6 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { tracks, trackstype } from './tracks';
-// npm test -- test/tracks.e2e.spec.ts
 import { validate as uuidValidate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 import { createTrackDto } from './dto/createTrackDto';
@@ -30,7 +29,6 @@ export class TracksService {
     const x = tracks.find((track) => track.id === id);
 
     if (!x) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     return x;
@@ -54,7 +52,6 @@ export class TracksService {
     const trackfound = tracks.find((track) => track.id === id);
 
     if (!trackfound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     trackfound.name = dto.name;
@@ -71,7 +68,6 @@ export class TracksService {
     const trackFound = tracks.find((user) => user.id === id);
 
     if (!trackFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 

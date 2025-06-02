@@ -19,13 +19,11 @@ export class ArtistsService {
   constructor(
     @Inject(forwardRef(() => FavoritesService))
     private favoritesService: FavoritesService,
-    // @Inject(forwardRef(() => AlbumsService))
     private albumService: AlbumsService,
     private trackService: TracksService,
   ) {}
 
   getAll() {
-    console.log(artists);
     return artists;
   }
 
@@ -47,7 +45,6 @@ export class ArtistsService {
     const x = artists.find((artist) => artist.id === artistId);
 
     if (!x) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     return x;
@@ -61,7 +58,6 @@ export class ArtistsService {
     const artist = this.findById(id);
 
     if (!artist) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     artist.name = dto.name;
@@ -76,7 +72,6 @@ export class ArtistsService {
     const x = this.findById(id);
 
     if (!x) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     const artistIndex = artists.findIndex((art) => art.id === id);
@@ -94,4 +89,3 @@ export class ArtistsService {
     return x;
   }
 }
-// npm test -- test/artists.e2e.spec.ts

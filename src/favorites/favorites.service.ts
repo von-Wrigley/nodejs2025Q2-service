@@ -31,7 +31,6 @@ export class FavoritesService {
 
     const x = this.trackService.getTrackForFavorites(id);
     if (!x) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not exist', HttpStatus.UNPROCESSABLE_ENTITY);
     }
     favorites.tracks.push(x);
@@ -43,7 +42,6 @@ export class FavoritesService {
     const trackFound = favorites.tracks.find((user) => user.id === id);
 
     if (!trackFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
@@ -65,7 +63,6 @@ export class FavoritesService {
     const alb = this.albumService.getAlbumForFavorites(id);
 
     if (!alb) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.UNPROCESSABLE_ENTITY);
     }
     favorites.albums.push(alb);
@@ -75,11 +72,8 @@ export class FavoritesService {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
     const albumFound = favorites.albums.find((user) => user.id === id);
-    console.log(albumFound);
-    console.log('wdwwd');
 
     if (!albumFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
@@ -100,7 +94,6 @@ export class FavoritesService {
     const artist = this.artistService.getArtistforFavorites(id);
 
     if (!artist) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.UNPROCESSABLE_ENTITY);
     }
     favorites.artists.push(artist);
@@ -111,7 +104,6 @@ export class FavoritesService {
     }
     const artistFound = favorites.artists.find((user) => user.id === id);
     if (!artistFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 

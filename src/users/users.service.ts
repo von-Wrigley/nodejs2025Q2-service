@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  // NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { validate as uuidValidate } from 'uuid';
 import { users, Userstype } from './users';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,7 +21,6 @@ export class UsersService {
     const x = users.find((user) => user.id === id);
 
     if (!x) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
     return plainToClass(UserEntity, x);
@@ -53,21 +47,16 @@ export class UsersService {
     const user = users.find((user) => user.id === id);
 
     if (!user) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    console.log(user);
-    console.log(users);
+
     if (user.password !== dto.oldPassword) {
-      console.log(user.password);
-      console.log(dto.oldPassword);
       throw new HttpException('oldPassword is wrong', HttpStatus.FORBIDDEN);
     }
 
     user.password = dto.newPassword;
     user.version = user.version + 1;
     user.updatedAt = new Date().getMilliseconds();
-    console.log();
     return plainToClass(UserEntity, user);
   }
 
@@ -78,18 +67,10 @@ export class UsersService {
 
     const userFound = users.find((user) => user.id === id);
     if (!userFound) {
-      // throw new NotFoundException('NOT_FOUND')
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    // users.filter((user) => user.id !== userFound.id);
     const userIndex = users.findIndex((user) => user.id === id);
     users.splice(userIndex, 1);
     return true;
   }
 }
-
-// npm test -- test/users.e2e.spec.ts
-// npm test -- test/artists.e2e.spec.ts
-// npm test -- test/albums.e2e.spec.ts
-// npm test -- test/favorites.e2e.spec.ts
-// npm test -- test/tracks.e2e.spec.ts
