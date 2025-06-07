@@ -38,7 +38,7 @@ postgres:
     volumes:
       - postgres_data:/var/lib/postgresql/data 
       - postgres_logs:/var/log/postgresql  
-    command: postgres -c listen_addresses='*'
+    command: npm run start:dev 
     logging:
       options:
         max-size: "10m"
@@ -49,3 +49,4 @@ networks:
 
 volumes:
   postgres_data:
+  postgres_logs:
