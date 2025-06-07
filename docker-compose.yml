@@ -1,0 +1,51 @@
+
+
+services:
+    main:
+    container_name: main
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 4000:4000
+    command: npm start
+    env_file:
+      - .env
+    networks:
+      - api
+    depends_on:
+      - postgres
+postgres:
+    image: postgres:17
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=myDB
+      - POSTGRES_USER=homeLib
+      - POSTGRES_PASSWORD=12345
+    ports:
+      - "5432:5432"
+    networks:
+      - prisma-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prisma -d postgres"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data 
+      - postgres_logs:/var/log/postgresql  
+    command: postgres -c listen_addresses='*'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  prisma-network:
+
+volumes:
+  postgres_data:
