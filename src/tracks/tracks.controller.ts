@@ -18,26 +18,44 @@ export class TracksController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  getAll() {
+  async getAll() {
     return this.tracksService.getAll();
   }
 
+  // @Get(':id')
+  // getTrack(@Param('id') id: string) {
+  //   return this.tracksService.getTrack(id);
+  // }
   @Get(':id')
-  getTrack(@Param('id') id: string) {
+  async getTrack(@Param('id') id: string) {
     return this.tracksService.getTrack(id);
   }
+
   @Post()
-  create(@Body() dto: createTrackDto) {
+  async create(@Body() dto: createTrackDto) {
     return this.tracksService.create(dto);
   }
-  @HttpCode(HttpStatus.OK)
+
+  // @HttpCode(HttpStatus.OK)
+  // @Put(':id')
+  // changeById(@Param('id') id: string, @Body() dto: createTrackDto) {
+  //   return this.tracksService.changeById(id, dto);
+  // }
+
   @Put(':id')
-  changeById(@Param('id') id: string, @Body() dto: createTrackDto) {
+  async changeById(@Param('id') id: string, @Body() dto: createTrackDto) {
     return this.tracksService.changeById(id, dto);
   }
-  @HttpCode(204)
+
+  // @HttpCode(204)
+  // @Delete(':id')
+  // deleteById(@Param('id') id: string) {
+  //   return this.tracksService.delete(id);
+  // }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteById(@Param('id') id: string) {
+  async delete(@Param('id') id: string) {
     return this.tracksService.delete(id);
   }
 }

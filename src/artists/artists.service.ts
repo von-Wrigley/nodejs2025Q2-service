@@ -77,7 +77,7 @@ export class ArtistsService {
     const artistIndex = artists.findIndex((art) => art.id === id);
     artists.splice(artistIndex, 1);
 
-    this.trackService.nullArtistId(id);
+    this.trackService.nullifyArtistId(id);
     this.albumService.NullArtistId(id);
 
     this.favoritesService.deleteArtistFav(id);

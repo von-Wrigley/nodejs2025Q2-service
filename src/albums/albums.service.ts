@@ -75,7 +75,7 @@ export class AlbumsService {
     const albIndex = albums.findIndex((tr) => tr.id === id);
     albums.splice(albIndex, 1);
 
-    this.TrackService.nullAlbumId(id);
+    this.TrackService.nullifyAlbumId(id);
 
     this.favoritesService.deleteAlbumFav(id);
 

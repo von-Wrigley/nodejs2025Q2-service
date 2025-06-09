@@ -89,6 +89,6 @@ export class UsersService {
     // const userIndex = users.findIndex((user) => user.id === id);
     // users.splice(userIndex, 1);
     // return true;
-     return this.prisma.user.delete({ where: { id: Number(id) } })
+    return this.prisma.user.delete({ where: { id } });
   }
 }

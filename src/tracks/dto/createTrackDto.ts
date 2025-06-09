@@ -1,9 +1,11 @@
-import { IsInt, IsNumber, IsString, Min } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class createTrackDto {
   @IsString()
   name: string;
+  @IsOptional()
   artistId: string | null; // refers to Artist
+  @IsOptional()
   albumId: string | null; // refers to Album
   @IsNumber()
   @IsInt({ message: 'Track duration should be an integer' })
