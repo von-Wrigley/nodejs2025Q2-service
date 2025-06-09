@@ -10,16 +10,10 @@
 
 ## Running application
 
-After installation, type this command: 
-
-- npm start
-
-You can check the application work in Postman or in Swagger. 
+You shoulld have docker to run engine
+After type this command: 
+- docker-compose up -d
 In order to open the Swagger, you should type e.g.  http://localhost:4000/doc 
 
 
-## Testing
- The application should be running. To test application type this:
-
- - npm run test
 
