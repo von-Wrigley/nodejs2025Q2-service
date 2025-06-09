@@ -13,7 +13,7 @@
 You shoulld have docker to run engine
 After type this command: 
 - docker-compose up -d
-In order to open the Swagger, you should type e.g.  http://localhost:4000/doc 
+- In order to open the Swagger, you should type e.g.  http://localhost:4000/doc 
 
 
 
