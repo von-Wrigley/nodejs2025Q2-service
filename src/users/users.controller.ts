@@ -12,6 +12,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
+import { UserEntity } from './userEntity';
+import { Prisma } from 'generated/prisma_client';
 
 @Controller('user')
 export class UsersController {
@@ -19,28 +21,30 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  findAll() {
+  async findAll(): Promise<UserEntity[]> {
     return this.usersService.findAll();
   }
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findById(@Param('id') id: string) {
+  async findById(@Param('id') id: string): Promise<UserEntity> {
     return this.usersService.findById(id);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  createUser(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+  async createUser(
+    @Body() data: Prisma.UserCreateInput,
+  ): Promise<CreateUserDto> {
+    return this.usersService.create(data);
   }
   @HttpCode(HttpStatus.OK)
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() dto: UpdatePasswordDto) {
-    return this.usersService.update(id, dto);
+  async updateUser(@Param('id') id: string, @Body() data: UpdatePasswordDto) {
+    return this.usersService.update(id, data);
   }
   @HttpCode(204)
   @Delete(':id')
-  deleteById(@Param('id') id: string) {
-    return this.usersService.delete(id);
+  async deleteById(@Param('id') id: string) {
+    return await this.usersService.delete(id);
   }
 }

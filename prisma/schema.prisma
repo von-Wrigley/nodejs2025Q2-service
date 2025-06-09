@@ -6,48 +6,55 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../node_modules/.prisma/client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"] 
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      =   env("DATABASE_URL")
 }
 
 model Album {
-  id        String @id @default(uuid())
-  name      String
-  year      Int
-  artistId  String? 
-  artist    Artists? @relation(fields: [artistId], references: [id])
+  id       String  @id @default(uuid())
+  name     String
+  year     Int
+  artistId String?
+  artist   Artist? @relation(fields: [artistId], references: [id])
+  Track    Track[]
 }
 
 model Artist {
-  id        String @id @default(uuid())
-  name      String
-  grammy    Boolean    
+  id     String  @id @default(uuid())
+  name   String
+  grammy Boolean
+  Album  Album[]
+  Track  Track[]
 }
+
 model Favorite {
-  artists   Artists[]
-  albums    Albums[]
-  tracks    Tracks[]
+  artists String[]
+  albums  String[]
+  tracks  String[]
+
+  @@unique([artists, albums, tracks])
 }
 
 model Track {
-  id          String @id @default(uuid())
-  name        String
-  artistId    String? 
-  artist      Artists? @relation(fields: [artistId], references: [id])
-  albumId     String? 
-  album       Albums? @relation(fields: [albumId], references: [id])
-  duration    Int
+  id       String  @id @default(uuid())
+  name     String
+  artistId String?
+  artist   Artist? @relation(fields: [artistId], references: [id])
+  albumId  String?
+  album    Album?  @relation(fields: [albumId], references: [id])
+  duration Int
 }
 
 model User {
-  id          String @id @default(uuid())
-  login       String
-  password    String
-  version     Int
-  createdAt   Int
-  updatedAt   Int
+  id        String    @id @default(uuid())
+  login     String
+  password  String
+  version   Int       @default(1)
+  createdAt Int @default(dbgenerated("extract(epoch from now())::int"))
+  updatedAt Int @default(dbgenerated("extract(epoch from now())::int"))
 }

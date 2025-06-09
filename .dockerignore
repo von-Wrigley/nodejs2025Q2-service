@@ -1,6 +1,7 @@
-node_modules
 .git
 .env
-Dockerfile
+Dockerfile.db
 Dockerfile.app
 docker-compose.yml
+!prisma/schema.prisma 
+node_modules

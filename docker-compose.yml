@@ -1,25 +1,29 @@
-
-
 services:
-    main:
-    container_name: main
+  app:
     build:
-      context: .
-      target: development
+      context: .             
+      dockerfile: Dockerfile.app
+    container_name: app
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+    # - .:/app
+    - /app/node_modules
+    - ./node_modules/.prisma:/app/node_modules/.prisma
+    # - /app/node_modules/.prisma
     ports:
-      - 4000:4000
-    command: npm start
-    env_file:
-      - .env
+      - '4000:4000'
+    environment:
+      DATABASE_URL: 'postgresql://homeLib:12345@postgres:5432/myDB?schema=public&connect_timeout=300'
+            
+ 
     networks:
-      - api
+      - prisma-network
     depends_on:
-      - postgres
-postgres:
-    image: postgres:17
+      postgres:
+        condition: service_healthy
+  postgres:
+    build:
+      context: .               
+      dockerfile: Dockerfile.db
     container_name: postgres
     restart: always
     environment:
@@ -27,18 +31,17 @@ postgres:
       - POSTGRES_USER=homeLib
       - POSTGRES_PASSWORD=12345
     ports:
-      - "5432:5432"
+     - '5433:5432'
     networks:
       - prisma-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U prisma -d postgres"]
+      test: ["CMD-SHELL",  "pg_isready -U homeLib -d myDB"]
       interval: 5s
       timeout: 2s
       retries: 20
     volumes:
       - postgres_data:/var/lib/postgresql/data 
       - postgres_logs:/var/log/postgresql  
-    command: npm run start:dev 
     logging:
       options:
         max-size: "10m"
@@ -46,6 +49,7 @@ postgres:
 
 networks:
   prisma-network:
+    driver: bridge
 
 volumes:
   postgres_data:
