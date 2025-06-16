@@ -23,7 +23,6 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Get()

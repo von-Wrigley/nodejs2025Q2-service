@@ -11,10 +11,10 @@ import { AuthModule } from 'src/auth/auth.module';
   providers: [ArtistsService],
   exports: [ArtistsService],
   imports: [
+    AuthModule,
     AlbumsModule,
     TracksModule,
     forwardRef(() => FavoritesModule),
-    AuthModule,
   ],
 })
 export class ArtistsModule {}

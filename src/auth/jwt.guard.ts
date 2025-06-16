@@ -1,11 +1,8 @@
-
-import { Injectable } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {}
-
-
 
 // import {
 //   Injectable,
@@ -15,7 +12,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {}
 // } from '@nestjs/common';
 // import { JwtService } from '@nestjs/jwt';
 // import { Request } from 'express';
- 
 
 // @Injectable()
 // export class JwtAuthGuard implements CanActivate {
@@ -38,8 +34,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {}
 //       return true;
 //     }
 
- 
-
 //     if (!request.headers.authorization.startsWith('Bearer ')) {
 //       throw new UnauthorizedException(
 //         'Authorization must follow Bearer scheme',
@@ -56,7 +50,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {}
 //       await this.jwtService.verifyAsync(token, {
 //         secret: process.env.JWT_SECRET_KEY,
 //       });
-  
+
 //     } catch (error) {
 //       throw new UnauthorizedException('Invalid or expired token');
 //     }

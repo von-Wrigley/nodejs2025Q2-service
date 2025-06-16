@@ -9,6 +9,6 @@ import { AuthModule } from 'src/auth/auth.module';
   controllers: [AlbumsController],
   providers: [AlbumsService],
   exports: [AlbumsService],
-  imports: [TracksModule, forwardRef(() => FavoritesModule), AuthModule],
+  imports: [AuthModule, TracksModule, forwardRef(() => FavoritesModule)],
 })
 export class AlbumsModule {}
