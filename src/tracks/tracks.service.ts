@@ -56,7 +56,6 @@ export class TracksService {
       data: {
         name: dto.name,
         artist: dto.artistId ? { connect: { id: dto.artistId } } : null,
-             
 
         album: dto.albumId ? { connect: { id: dto.albumId } } : null,
         duration: dto.duration,
@@ -69,8 +68,7 @@ export class TracksService {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
     // const trackfound = tracks.find((track) => track.id === id);
-        const track = await this.prisma.track.findUnique({ where: { id } });
-
+    const track = await this.prisma.track.findUnique({ where: { id } });
 
     if (!track) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -81,24 +79,23 @@ export class TracksService {
     // trackfound.duration = dto.duration;
     // return trackfound;
 
-    const x =  await this.prisma.track.update({
-        where: { id },
-        data: {
-          name: dto.name,
-          duration: dto.duration,
-          artistId: dto.artistId || null,
-          albumId: dto.albumId || null,
-        },
-      });
- return x;
-
+    const x = await this.prisma.track.update({
+      where: { id },
+      data: {
+        name: dto.name,
+        duration: dto.duration,
+        artistId: dto.artistId || null,
+        albumId: dto.albumId || null,
+      },
+    });
+    return x;
   }
 
- async delete(id: string) {
+  async delete(id: string) {
     if (!uuidValidate(id)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
-     const track = await this.prisma.track.findUnique({ where: { id } });
+    const track = await this.prisma.track.findUnique({ where: { id } });
 
     if (!track) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -106,8 +103,8 @@ export class TracksService {
 
     // const trackIndex = tracks.findIndex((tr) => tr.id === id);
     // tracks.splice(trackIndex, 1);
-   
-   await this.favoritesService.deleteTrackFav(id);
+
+    await this.favoritesService.deleteTrackFav(id);
 
     return true;
   }
@@ -136,7 +133,7 @@ export class TracksService {
       data: { albumId: null },
     });
   }
- async getTrackForFavorites(id: string) {
+  async getTrackForFavorites(id: string) {
     const x = await this.prisma.track.findUnique({ where: { id } });
     return x;
   }

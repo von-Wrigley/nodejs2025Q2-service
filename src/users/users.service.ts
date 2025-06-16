@@ -8,6 +8,7 @@ import { plainToClass } from 'class-transformer';
 import { UserEntity } from './userEntity';
 import { PrismaService } from 'src/prisma.service';
 import { Prisma } from 'generated/prisma_client';
+const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UsersService {
@@ -36,11 +37,12 @@ export class UsersService {
 
   async create(data: Prisma.UserCreateInput): Promise<any> {
     const tS = new Date().getMilliseconds();
+    const newPass = await bcrypt.hash(data.password, 10);
     const user = await this.prisma.user.create({
       data: {
         id: uuidv4(),
         login: data.login,
-        password: data.password,
+        password: newPass,
         version: 1,
         createdAt: tS,
         updatedAt: tS,
@@ -62,8 +64,11 @@ export class UsersService {
     if (!user) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-
-    if (user.password !== dto.oldPassword) {
+    const isPasswordValid = await bcrypt.compare(
+      dto.newPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
       throw new HttpException('oldPassword is wrong', HttpStatus.FORBIDDEN);
     }
 
@@ -81,8 +86,10 @@ export class UsersService {
     if (!uuidValidate(id)) {
       throw new HttpException('Not valid id', HttpStatus.BAD_REQUEST);
     }
-
-    const userFound = users.find((user) => user.id === id);
+    console.log(id);
+    const userFound = await this.prisma.user.findUnique({
+      where: { id },
+    });
     if (!userFound) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }

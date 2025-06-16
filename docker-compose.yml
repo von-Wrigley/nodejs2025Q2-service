@@ -6,9 +6,10 @@ services:
     container_name: app
     restart: always
     volumes:
+    - ./src:/app/src 
     # - .:/app
-    - /app/node_modules
-    - ./node_modules/.prisma:/app/node_modules/.prisma
+    # - /app/node_modules
+    # - ./node_modules/.prisma:/app/node_modules/.prisma
     # - /app/node_modules/.prisma
     ports:
       - '${PORT}:${PORT}'

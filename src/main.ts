@@ -5,6 +5,7 @@ import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { load as loadYaml } from 'js-yaml';
 import { readFile } from 'fs/promises';
 import 'dotenv/config';
+import { JwtAuthGuard } from './auth/jwt.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,7 +15,12 @@ async function bootstrap() {
   const raw = await readFile('doc/api.yaml', 'utf8');
   const doc = loadYaml(raw) as OpenAPIObject;
   doc.servers = [{ url: `http://localhost:${port}` }];
-  SwaggerModule.setup('doc', app, doc);
+  SwaggerModule.setup('doc', app, doc, {
+    swaggerOptions: {
+      persistAuthorization: false,
+    },
+  });
+
   await app.listen(port);
 }
 bootstrap();

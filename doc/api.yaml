@@ -117,7 +117,7 @@ security:
   - bearerAuth: []
 
 paths:
-  /login:
+  /auth/login:
     post:
       tags:
         - Login
@@ -154,7 +154,7 @@ paths:
                 description: JWT Token
         403:
           description: Incorrect login or password
-  /signup:
+  /auth/signup:
     post:
       tags:
         - Signup
@@ -195,6 +195,8 @@ paths:
         - Users
       summary: Get all users
       description: Gets all users
+      security:   
+      - bearerAuth: []
       responses:
         200:
           description: Successful operation
@@ -211,6 +213,8 @@ paths:
         - Users
       summary: Create user
       description: Creates a new user
+      security:   
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -251,6 +255,8 @@ paths:
         - Users
       summary: Get single user by id
       description: Get single user by id
+      security:   
+      - bearerAuth: []
       responses:
         200:
           description: Successful operation
@@ -270,6 +276,8 @@ paths:
         - Users
       summary: Update a user's password
       description: Updates a user's password by ID
+      security:   
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -325,6 +333,8 @@ paths:
         - Users
       summary: Delete user
       description: Deletes user by ID.
+      security:   
+      - bearerAuth: []
       responses:
         204:
           description: The user has been deleted
